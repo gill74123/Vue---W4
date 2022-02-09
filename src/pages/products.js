@@ -1,4 +1,6 @@
-import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.29/vue.esm-browser.min.js"
+import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.29/vue.esm-browser.min.js";
+import pagination from "../components/pagination.js";
+
 
 // 宣告變數
 // 因其他地方還需呼叫此變數，所以定義在外層
@@ -12,11 +14,15 @@ const app = createApp({
             baseUrl: "https://vue3-course-api.hexschool.io/v2",
             apiPath: "gillchin",
             products: [],
+            pagination: {},
             tempProduct: {
                 imagesUrl: []
             },
             isNew: true,
         }
+    },
+    components: {
+        pagination
     },
     methods: {
         // 確認使用者
@@ -50,12 +56,14 @@ const app = createApp({
             })
         },
         // 取得產品列表
-        getProducts() {
-            const url = `${this.baseUrl}/api/${this.apiPath}/admin/products`;
+        getProducts(page = 1) { // 參數預設值
+            // query 參數用?帶入網址
+            const url = `${this.baseUrl}/api/${this.apiPath}/admin/products?page=${page}`;
             axios.get(url)
             .then((res) => {
                 // console.log(res);
                 this.products = res.data.products;
+                this.pagination = res.data.pagination; // 取得分頁資訊
             })
             .catch((err) => {
                 console.log(err.response);
@@ -156,7 +164,6 @@ const app = createApp({
         this.checkAdmin();
 
         // 使用 new 建立 bootstrap modal，拿到實體 DOM 並賦予到變數上
-        // 新增/編輯 ProductModal
         productModal = new bootstrap.Modal(document.querySelector('#productModal'), {keyboard: false});
         delProductModal = new bootstrap.Modal(document.querySelector('#delProductModal'), {keyboard: false});
         logoutModal = new bootstrap.Modal(document.querySelector('#logoutModal'), {keyboard: false});
