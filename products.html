@@ -81,64 +81,10 @@
         </div>
 
         <!-- product Modal-->
-        <product-modal :temp-product="tempProduct" :is-new="isNew" :base-url="baseUrl" :api-path="apiPath" @get-products="getProducts"></product-modal>
+        <product-modal ref="productModal" :temp-product="tempProduct" :is-new="isNew" @get-products="getProducts"></product-modal>
 
-
-
-        <!-- delProduct Modal -->
-        <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
-            aria-labelledby="delProductModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content border-0">
-                    <div class="modal-header bg-danger text-white">
-                        <h5 id="delProductModalLabel" class="modal-title">
-                            <span>刪除產品</span>
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        是否刪除
-                        <strong class="text-danger">{{ tempProduct.title }}</strong> 商品(刪除後將無法恢復)。
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            取消
-                        </button>
-                        <button type="button" class="btn btn-danger" @click="delProduct(tempProduct.id)">
-                            確認刪除
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- logout Modal -->
-        <div id="logoutModal" ref="delProductModal" class="modal fade" tabindex="-1" aria-labelledby="logoutModal"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content border-0">
-                    <div class="modal-header bg-secondary text-white">
-                        <h5 id="logoutModal" class="modal-title">
-                            <span>登出管理頁面</span>
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        是否要登出管理頁面？
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            取消
-                        </button>
-                        <button type="button" class="btn btn-secondary" @click="logout">
-                            確認登出
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- alert Modal -->
+        <alert-modal ref="alertModal" :temp-product="tempProduct" :alert-modal-status="alertModalStatus" @get-products="getProducts"></alert-modal>
     </div>
 
     <!-- 使用 x-template 模板-->
@@ -266,6 +212,43 @@
             </div>
         </div>
     </script>
+
+    <!-- alert Modal -->
+    <script type="text/x-template" id="alertModal">
+        <div id="alertModal" ref="alertModal" class="modal fade" tabindex="-1"
+            aria-labelledby="alertModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content border-0">
+                    <div class="modal-header text-white" :class="{'bg-danger': alertModalStatus === 'delete', 'bg-secondary': alertModalStatus === 'logout'}">
+                        <h5 id="alertModalLabel" class="modal-title">
+                            <span v-if="alertModalStatus === 'delete'">刪除產品</span>
+                            <span v-else>登出管理頁面</span>
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" v-if="alertModalStatus === 'delete'">
+                        是否刪除
+                        <strong class="text-danger">{{ tempProduct.title }}</strong> 商品(刪除後將無法恢復)。
+                    </div>
+                    <div class="modal-body" v-else>
+                        是否要登出管理頁面？
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            取消
+                        </button>
+                        <button type="button" class="btn btn-danger" v-if="alertModalStatus === 'delete'" @click="delProduct(tempProduct.id)">
+                            確認刪除
+                        </button>
+                        <button type="button" class="btn btn-secondary" v-else @click="logout">
+                            確認登出
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
     
 
     <!-- Bootstrap -->
@@ -275,5 +258,4 @@
     <!-- products.js -->
     <script src="./src/pages/products.js" type="module"></script>
 </body>
-
 </html>

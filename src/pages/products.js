@@ -1,12 +1,13 @@
 import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.29/vue.esm-browser.min.js";
 import pagination from "../components/pagination.js";
-import {modalForProduct} from "../components/modal.js";
+import { modalForProduct, modalForAlert } from "../components/modal.js";
 
 // 宣告變數
 // 因其他地方還需呼叫此變數，所以定義在外層
 let productModal = ""; 
-let delProductModal = "";
-let logoutModal = "";
+// let delProductModal = "";
+// let logoutModal = "";
+let alertModal = "";
 
 const app = createApp({
     data() {
@@ -19,12 +20,14 @@ const app = createApp({
                 imagesUrl: []
             },
             isNew: true,
+            alertModalStatus: "",
         }
     },
     components: {
         // 分頁元素
         'pagination': pagination,
-        'product-modal': modalForProduct
+        'product-modal': modalForProduct,
+        'alert-modal': modalForAlert,
         
     },
     methods: {
@@ -43,19 +46,6 @@ const app = createApp({
 
                 // 頁面跳轉
                 window.location = "login.html";
-            })
-        },
-        // 登出
-        logout() {
-            const url = `${this.baseUrl}/logout`;
-            axios.post(url)
-            .then((res) => {
-                // console.log(res);
-                // 頁面跳轉
-                window.location = "login.html";
-            })
-            .catch((err) => {
-                console.log(err.response);
             })
         },
         // 取得產品列表
@@ -85,7 +75,7 @@ const app = createApp({
                 this.isNew = true;
 
                 // 開啟 modal
-                productModal.show();
+                this.$refs.productModal.openProductModal()
             } else if (modalStatus === 'edit') {
                 // 編輯 - 拷貝點選的產品
                 this.tempProduct = {...item};
@@ -94,36 +84,23 @@ const app = createApp({
                 this.isNew = false;
 
                 // 開啟 modal
-                productModal.show();
+                this.$refs.productModal.openProductModal()
             } else if (modalStatus === 'delete') {
                 // 刪除 - 拷貝點選的產品
                 this.tempProduct = {...item};
 
+                this.alertModalStatus = modalStatus;
+                
                 // 開啟 modal
-                delProductModal.show();
+                this.$refs.alertModal.openProductModal();
             } else if (modalStatus === 'logout') {
+                this.alertModalStatus = modalStatus;
+
                 // 開啟 modal
-                logoutModal.show();
+                this.$refs.alertModal.openProductModal();
             }
         },
-        // 刪除產品
-        delProduct(productId) {
-            const url = `${this.baseUrl}/api/${this.apiPath}/admin/product/${productId}`;
-
-            axios.delete(url)
-            .then((res) => {
-                console.log(res);
-
-                // 關閉 Modal
-                delProductModal.hide();
-
-                // 執行 取得產品列表
-                this.getProducts();
-            })
-            .catch((err) => {
-                console.log(err.response);
-            })
-        },
+        
     },
     mounted() {
         // 取 cookie 內的 token
@@ -135,9 +112,11 @@ const app = createApp({
         this.checkAdmin();
 
         // 使用 new 建立 bootstrap modal，拿到實體 DOM 並賦予到變數上
-        productModal = new bootstrap.Modal(document.querySelector('#productModal'), {keyboard: false});
-        delProductModal = new bootstrap.Modal(document.querySelector('#delProductModal'), {keyboard: false});
-        logoutModal = new bootstrap.Modal(document.querySelector('#logoutModal'), {keyboard: false});
+        // productModal = new bootstrap.Modal(document.querySelector('#productModal'), {keyboard: false});
+        // delProductModal = new bootstrap.Modal(document.querySelector('#delProductModal'), {keyboard: false});
+        // logoutModal = new bootstrap.Modal(document.querySelector('#logoutModal'), {keyboard: false});
+        // alertModal = new bootstrap.Modal(document.querySelector('#alertModal'), {keyboard: false});
+
     },
 })
 
