@@ -79,7 +79,71 @@
             <!-- pagination -->
             <pagination :pages="pagination" :products="products" @get-products="getProducts"></pagination>
         </div>
-        <!-- product Modal -->
+
+        <!-- product Modal-->
+        <product-modal :temp-product="tempProduct" :is-new="isNew" :base-url="baseUrl" :api-path="apiPath" @get-products="getProducts"></product-modal>
+
+
+
+        <!-- delProduct Modal -->
+        <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
+            aria-labelledby="delProductModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content border-0">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 id="delProductModalLabel" class="modal-title">
+                            <span>刪除產品</span>
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        是否刪除
+                        <strong class="text-danger">{{ tempProduct.title }}</strong> 商品(刪除後將無法恢復)。
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            取消
+                        </button>
+                        <button type="button" class="btn btn-danger" @click="delProduct(tempProduct.id)">
+                            確認刪除
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- logout Modal -->
+        <div id="logoutModal" ref="delProductModal" class="modal fade" tabindex="-1" aria-labelledby="logoutModal"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content border-0">
+                    <div class="modal-header bg-secondary text-white">
+                        <h5 id="logoutModal" class="modal-title">
+                            <span>登出管理頁面</span>
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        是否要登出管理頁面？
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            取消
+                        </button>
+                        <button type="button" class="btn btn-secondary" @click="logout">
+                            確認登出
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 使用 x-template 模板-->
+    <!-- product Modal -->
+    <script type="text/x-template" id="productModal">
         <div id="productModal" ref="productModal" class="modal fade" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content border-0">
@@ -140,7 +204,7 @@
                                     <input id="title" type="text" class="form-control" placeholder="請輸入標題"
                                         v-model="tempProduct.title">
                                 </div>
-
+    
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <label for="category" class="form-label">分類</label>
@@ -153,7 +217,7 @@
                                             v-model="tempProduct.unit">
                                     </div>
                                 </div>
-
+    
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <label for="origin_price" class="form-label">原價</label>
@@ -167,7 +231,7 @@
                                     </div>
                                 </div>
                                 <hr>
-
+    
                                 <div class="mb-3">
                                     <label for="description" class="form-label">產品描述</label>
                                     <textarea id="description" type="text" class="form-control" placeholder="請輸入產品描述"
@@ -201,63 +265,8 @@
                 </div>
             </div>
         </div>
-
-        <!-- delProduct Modal -->
-        <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
-            aria-labelledby="delProductModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content border-0">
-                    <div class="modal-header bg-danger text-white">
-                        <h5 id="delProductModalLabel" class="modal-title">
-                            <span>刪除產品</span>
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        是否刪除
-                        <strong class="text-danger">{{ tempProduct.title }}</strong> 商品(刪除後將無法恢復)。
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            取消
-                        </button>
-                        <button type="button" class="btn btn-danger" @click="delProduct(tempProduct.id)">
-                            確認刪除
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- logout Modal -->
-        <div id="logoutModal" ref="delProductModal" class="modal fade" tabindex="-1" aria-labelledby="logoutModal"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content border-0">
-                    <div class="modal-header bg-secondary text-white">
-                        <h5 id="logoutModal" class="modal-title">
-                            <span>登出管理頁面</span>
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        是否要登出管理頁面？
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            取消
-                        </button>
-                        <button type="button" class="btn btn-secondary" @click="logout">
-                            確認登出
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    </script>
+    
 
     <!-- Bootstrap -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"></script>

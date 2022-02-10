@@ -1,6 +1,6 @@
 import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.29/vue.esm-browser.min.js";
 import pagination from "../components/pagination.js";
-
+import {modalForProduct} from "../components/modal.js";
 
 // 宣告變數
 // 因其他地方還需呼叫此變數，所以定義在外層
@@ -22,7 +22,10 @@ const app = createApp({
         }
     },
     components: {
-        pagination
+        // 分頁元素
+        'pagination': pagination,
+        'product-modal': modalForProduct
+        
     },
     methods: {
         // 確認使用者
@@ -102,38 +105,6 @@ const app = createApp({
                 // 開啟 modal
                 logoutModal.show();
             }
-        },
-        // 新增產品/更新編輯產品
-        updateProduct(productId) {
-            let url = "";
-            let httpMethod = "";
-
-            if (this.isNew) {
-                url = `${this.baseUrl}/api/${this.apiPath}/admin/product`;
-                httpMethod = "post";
-            } else {
-                url = `${this.baseUrl}/api/${this.apiPath}/admin/product/${productId}`;
-                httpMethod = "put";
-            }
-
-            axios[httpMethod](url, {data: this.tempProduct})
-            .then((res) => {
-                // console.log(res);
-                // 關閉 Modal
-                productModal.hide();
-
-                // 執行 取得產品列表
-                this.getProducts();
-            })
-            .catch((err) => {
-                console.log(err.response);
-            })
-        },
-        // 編輯畫面 - 新增多圖
-        createImage() {
-            // 建立新產品時沒有新增多圖就不會有 tempProduct.imagesUrl 的陣列
-            this.tempProduct.imagesUrl = [];
-            this.tempProduct.imagesUrl.push('');
         },
         // 刪除產品
         delProduct(productId) {
