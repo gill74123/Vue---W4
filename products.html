@@ -81,10 +81,12 @@
         </div>
 
         <!-- product Modal-->
-        <product-modal ref="productModal" :temp-product="tempProduct" :is-new="isNew" @get-products="getProducts"></product-modal>
+        <product-modal ref="productModal" :temp-product="tempProduct" :is-new="isNew" @get-products="getProducts">
+        </product-modal>
 
         <!-- alert Modal -->
-        <alert-modal ref="alertModal" :temp-product="tempProduct" :alert-modal-status="alertModalStatus" @get-products="getProducts"></alert-modal>
+        <alert-modal ref="alertModal" :temp-product="tempProduct" :alert-modal-status="alertModalStatus"
+            @get-products="getProducts"></alert-modal>
     </div>
 
     <!-- 使用 x-template 模板-->
@@ -115,33 +117,34 @@
                                 <h3>多圖新增</h3>
                                 <!-- 判斷 tempProduct.imagesUrl 是否為陣列，若不判斷，底下有關陣列的屬性會報錯-->
                                 <div class="mb-2" v-if="Array.isArray(tempProduct.imagesUrl)">
-                                    <template v-for="(image, index) in tempProduct.imagesUrl" :key="index">
+                                    <!-- <template v-for="(image, index) in tempProduct.imagesUrl" :key="index">
                                         <div class="mb-3">
                                             <label for="imageUrl" class="form-label">{{`網址${index + 1}`}}</label>
                                             <input type="text" class="form-control" placeholder="請輸入圖片連結"
                                                 v-model="tempProduct.imagesUrl[index]">
                                         </div>
                                         <img class="img-fluid" :src="image" alt="">
+                                    </template> -->
+
+                                    <!-- 圖片上傳 -->
+                                    <template v-for="(image, index) in tempProduct.imagesUrl" :key="index">
+                                        <div>
+                                            <img class="img-fluid" :src="image" alt="">
+                                        </div>
+                                        
                                     </template>
-                                    <div
-                                        v-if="!tempProduct.imagesUrl.length || tempProduct.imagesUrl[tempProduct.imagesUrl.length - 1]">
-                                        <button class="btn btn-outline-primary btn-sm d-block w-100"
-                                            @click="tempProduct.imagesUrl.push('')">
-                                            新增圖片
-                                        </button>
-                                    </div>
-                                    <div v-else>
-                                        <button class="btn btn-outline-danger btn-sm d-block w-100"
-                                            @click="tempProduct.imagesUrl.pop('')">
-                                            刪除圖片
-                                        </button>
+                                    <div class="my-3">
+                                        <input class="form-control" type="file" id="formFile" @change="imageUpload">
                                     </div>
                                 </div>
                                 <!-- 建立新產品時沒有新增多圖，就不會有 tempProduct.imagesUrl 的陣列-->
                                 <div v-else>
-                                    <button class="btn btn-outline-primary btn-sm d-block w-100" @click="createImage">
+                                    <!-- <button class="btn btn-outline-primary btn-sm d-block w-100" @click="createImage">
                                         新增圖片
-                                    </button>
+                                    </button> -->
+                                    <div class="my-3" >
+                                        <input class="form-control" type="file" id="formFile" @change="imageUpload" @click="createImage">
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-sm-8">
@@ -249,7 +252,7 @@
             </div>
         </div>
     </script>
-    
+
 
     <!-- Bootstrap -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"></script>
@@ -258,4 +261,5 @@
     <!-- products.js -->
     <script src="./src/pages/products.js" type="module"></script>
 </body>
+
 </html>

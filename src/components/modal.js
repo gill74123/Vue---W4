@@ -2,6 +2,7 @@ const baseUrl = "https://vue3-course-api.hexschool.io/v2";
 const apiPath = "gillchin";
 let productModal = "";
 let alertModal = "";
+let fileInput = "";
 
 // 產品新增/編輯 product Modal
 export const modalForProduct = {
@@ -10,8 +11,8 @@ export const modalForProduct = {
         // 編輯畫面 - 新增多圖
         createImage() {
             // 建立新產品時沒有新增多圖就不會有 tempProduct.imagesUrl 的陣列
-            tempProduct.imagesUrl = [];
-            tempProduct.imagesUrl.push('');
+            this.tempProduct.imagesUrl = [];
+            // this.tempProduct.imagesUrl.push('');
         },
         // 新增產品/更新編輯產品
         updateProduct(productId) {
@@ -44,10 +45,33 @@ export const modalForProduct = {
         },
         closeProductModal() {
             productModal.hide();
+        },
+        // 圖片上傳
+        imageUpload() {
+            // console.dir(fileInput);
+            const file = fileInput.files[0];
+            // console.log(file);
+
+            const formData = new FormData();
+            formData.append('file-to-upload', file)
+
+            const url = `${baseUrl}/api/${apiPath}/admin/upload`;
+
+
+            axios.post(url, formData)
+            .then((res) => {
+                console.log(res.data.imageUrl);
+                this.tempProduct.imagesUrl.push(res.data.imageUrl);
+                fileInput.value = "";
+            })
+            .catch((err) => {
+                console.log(err.response);
+            })
         }
     },
     mounted() {
         productModal = new bootstrap.Modal(document.querySelector('#productModal'), {keyboard: false});
+        fileInput = document.querySelector('#formFile');
     },
     template: '#productModal'
 }
