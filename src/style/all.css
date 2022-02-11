@@ -1,0 +1,20 @@
+.circleXmark {
+  color: gray;
+}
+
+.circleXmark:hover {
+  color: red;
+}
+
+.star {
+  color: rgba(87, 85, 82, 0.883);
+}
+
+.star:hover {
+  color: #fce40f;
+}
+
+.starActive {
+  color: #fce40f;
+}
+/*# sourceMappingURL=all.css.map */

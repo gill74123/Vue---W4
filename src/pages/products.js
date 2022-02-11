@@ -2,24 +2,19 @@ import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.29/vue
 import pagination from "../components/pagination.js";
 import { modalForProduct, modalForAlert } from "../components/modal.js";
 
-// 宣告變數
-// 因其他地方還需呼叫此變數，所以定義在外層
-let productModal = ""; 
-// let delProductModal = "";
-// let logoutModal = "";
-let alertModal = "";
+const baseUrl = "https://vue3-course-api.hexschool.io/v2";
+const apiPath = "gillchin";
 
 const app = createApp({
     data() {
         return {
-            baseUrl: "https://vue3-course-api.hexschool.io/v2",
-            apiPath: "gillchin",
             products: [],
             pagination: {},
             tempProduct: {
                 imagesUrl: []
             },
             isNew: true,
+            starRankData: 0,
             alertModalStatus: "",
         }
     },
@@ -28,15 +23,13 @@ const app = createApp({
         'pagination': pagination,
         'product-modal': modalForProduct,
         'alert-modal': modalForAlert,
-        
     },
     methods: {
         // 確認使用者
         checkAdmin() {
-            const url = `${this.baseUrl}/api/user/check`;
+            const url = `${baseUrl}/api/user/check`;
             axios.post(url)
             .then((res) => {
-                // console.log(res);
                 // 執行 取得產品列表
                 this.getProducts();
             })
@@ -51,10 +44,9 @@ const app = createApp({
         // 取得產品列表
         getProducts(page = 1) { // 參數預設值
             // query 參數用?帶入網址
-            const url = `${this.baseUrl}/api/${this.apiPath}/admin/products?page=${page}`;
+            const url = `${baseUrl}/api/${apiPath}/admin/products?page=${page}`;
             axios.get(url)
             .then((res) => {
-                // console.log(res);
                 this.products = res.data.products;
                 this.pagination = res.data.pagination; // 取得分頁資訊
             })
@@ -110,13 +102,6 @@ const app = createApp({
 
         // 執行 確認使用者
         this.checkAdmin();
-
-        // 使用 new 建立 bootstrap modal，拿到實體 DOM 並賦予到變數上
-        // productModal = new bootstrap.Modal(document.querySelector('#productModal'), {keyboard: false});
-        // delProductModal = new bootstrap.Modal(document.querySelector('#delProductModal'), {keyboard: false});
-        // logoutModal = new bootstrap.Modal(document.querySelector('#logoutModal'), {keyboard: false});
-        // alertModal = new bootstrap.Modal(document.querySelector('#alertModal'), {keyboard: false});
-
     },
 })
 
